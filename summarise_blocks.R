@@ -29,9 +29,12 @@ daily_null <- blocks %>% dplyr::group_by(Date) %>%
     return(x %>% dplyr::filter(TOTALFEE == 0) %>% nrow() / nrow(x))
   })
 
-daily$Mean <- as.numeric(daily$Mean)
-daily$Max <- as.numeric(daily_m$Max)
+# Complete DataFrame, round, update type
+daily$Mean <- as.numeric(daily$Mean) %>% round(2) %>% as.character()
+daily$Max <- as.numeric(daily_m$Max) %>% round(2) %>% as.character()
 daily$Null <- as.numeric(daily_null$.out) * 100
+daily$Null <- round(daily$Null, 1) %>% as.character()
+
 
 fwrite(daily, "~/nem_harvest/daily.csv")
 
@@ -48,5 +51,7 @@ ggsave(str_c(TODAY, ".png"), device = "png", path = "~/nem_harvest/", width = 9.
 ggsave("daily_plot.png", device = "png", path = "~/nem_harvest/", width = 8.10, height = 4.50, units = "in")
 
 # Generate last 7 days historical average fee
-last7days_data <- daily[(NROWS-7):(NROWS-1), ]
-ggplot(last7days_data, aes(Date, Mean)) + geom_line()
+# NOTE: Need to create before data frame was comleted by char type.
+
+# last7days_data <- daily[(NROWS-7):(NROWS-1), ]
+# ggplot(last7days_data, aes(Date, Mean)) + geom_line()
