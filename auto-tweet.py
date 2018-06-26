@@ -24,12 +24,14 @@ def main():
   # Obtain yesterday data
   tw_data = data.iloc[-2]
   MEAN = str(tw_data['Mean'])
+  MEDIAN = str(tw_data['Median'])
   MAX = str(tw_data['Max'])
   NULL_RATIO = str(tw_data['Null'])
 
   # Generate Tweet
   tweet = tw_data['Date'] + '\n'
   tweet = tweet + 'AVERAGE : ' + MEAN + '\n'
+  tweet = tweet + 'MEDIAN : ' + MEDIAN + '\n'
   tweet = tweet + 'MAX : ' + MAX + '\n'
   tweet = tweet + 'NULL BLOCK : ' + NULL_RATIO + ' %' 
   # tweet = tweet +  
