@@ -19,19 +19,25 @@ daily <- blocks %>% dplyr::group_by(Date) %>%
   purrrlyr::by_slice(~ mean(.x$TOTALFEE)) %>% 
   dplyr::rename(Mean = .out)
 
-daily_m <- blocks %>% dplyr::group_by(Date) %>% 
+daily_max <- blocks %>% dplyr::group_by(Date) %>% 
   purrrlyr::by_slice(~ max(.x$TOTALFEE)) %>% 
   dplyr::rename(Max = .out)
-daily_m$Max <- as.numeric(daily_m$Max)
+daily_max$Max <- as.numeric(daily_m$Max)
 
 daily_null <- blocks %>% dplyr::group_by(Date) %>% 
   purrrlyr::by_slice(function(x){
     return(x %>% dplyr::filter(TOTALFEE == 0) %>% nrow() / nrow(x))
   })
 
+daily_med <- blocks %>% dplyr::group_by(Date) %>% 
+  purrrlyr::by_slice(~ median(.x$TOTALFEE)) %>% 
+  dplyr::rename(Median = .out)
+daily$Median <- as.numeric(daily_med$Median)
+
 # Complete DataFrame, round, update type
 daily$Mean <- as.numeric(daily$Mean) %>% round(2) %>% as.character()
-daily$Max <- as.numeric(daily_m$Max) %>% round(2) %>% as.character()
+daily$Median <- as.numeric(daily_med$Median) %>% round(2) %>% as.character()
+daily$Max <- as.numeric(daily_max$Max) %>% round(2) %>% as.character()
 daily$Null <- as.numeric(daily_null$.out) * 100
 daily$Null <- round(daily$Null, 1) %>% as.character()
 
@@ -47,7 +53,7 @@ ggplot(today_data, aes(GMT_TIME, TOTALFEE)) +
   ggtitle(TODAY) +
   geom_line() + 
   theme_bw()
-ggsave(str_c(TODAY, ".png"), device = "png", path = "~/nem_harvest/", width = 9.00, height = 5.00, units = "in")
+ggsave(str_c(TODAY, ".png"), device = "png", path = "~/nem_harvest/", width = 8.10, height = 4.50, units = "in")
 ggsave("daily_plot.png", device = "png", path = "~/nem_harvest/", width = 8.10, height = 4.50, units = "in")
 
 # Generate last 7 days historical average fee
