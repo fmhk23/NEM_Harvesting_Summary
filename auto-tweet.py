@@ -24,10 +24,8 @@ def main():
   # Obtain yesterday data
   tw_data = data.iloc[-2]
   MEAN = str(tw_data['Mean'])
-  MEAN = MEAN[0:4]
   MAX = str(tw_data['Max'])
   NULL_RATIO = str(tw_data['Null'])
-  NULL_RATIO = NULL_RATIO[0:4]
 
   # Generate Tweet
   tweet = tw_data['Date'] + '\n'
