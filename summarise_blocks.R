@@ -22,7 +22,7 @@ daily <- blocks %>% dplyr::group_by(Date) %>%
 daily_max <- blocks %>% dplyr::group_by(Date) %>% 
   purrrlyr::by_slice(~ max(.x$TOTALFEE)) %>% 
   dplyr::rename(Max = .out)
-daily_max$Max <- as.numeric(daily_m$Max)
+daily_max$Max <- as.numeric(daily_max$Max)
 
 daily_null <- blocks %>% dplyr::group_by(Date) %>% 
   purrrlyr::by_slice(function(x){
