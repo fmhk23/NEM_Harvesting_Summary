@@ -24,13 +24,26 @@ public class CsvCreator {
       while(rs.next()){
         StringBuilder b = new StringBuilder();
         b.append(rs.getString("TIMESTAMP")).append(comma)
-          //.append(rs.getString("HARVESTERID")).append(comma)
-          .append(rs.getString("HEIGHT")).append(comma)
-          .append(rs.getString("TOTALFEE"))
-          //.append(rs.getString("DIFFICULTY")).append(comma)
-          .append(br);
+         .append(rs.getString("HEIGHT")).append(comma)
+         .append(rs.getString("TOTALFEE"))
+         .append(br);
 
         writer.write(b.toString());
+      }
+    }
+
+    rs = stmt.executeQuery("SELECT * FROM TRANSFERS");
+
+    try(BufferedWriter writer = Files.newBufferedWriter(Paths.get("transfers.csv"), Charset.defaultCharset())){
+      while(rs.next()){
+       StringBuilder b = new StringBuilder();
+       b.append(rs.getString("BLOCKID")).append(comma)
+        .append(rs.getString("TIMESTAMP")).append(comma)
+        .append(rs.getString("SENDERID")).append(comma)
+        .append(rs.getString("RECIPIENTID"))
+        .append(br);
+
+       writer.write(b.toString());
       }
     }
     
