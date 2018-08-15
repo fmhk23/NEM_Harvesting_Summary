@@ -30,10 +30,10 @@ def main():
 
   # Generate Tweet
   tweet = tw_data['Date'] + '\n'
-  tweet = tweet + 'AVERAGE : ' + MEAN + '\n'
-  tweet = tweet + 'MEDIAN : ' + MEDIAN + '\n'
-  tweet = tweet + 'MAX : ' + MAX + '\n'
-  tweet = tweet + 'NULL BLOCK : ' + NULL_RATIO + ' %' 
+  tweet = tweet + 'Average : ' + MEAN + '\n'
+  tweet = tweet + 'Median : ' + MEDIAN + '\n'
+  tweet = tweet + 'Max : ' + MAX + '\n'
+  tweet = tweet + 'Null Block : ' + NULL_RATIO + ' %' 
   # tweet = tweet +  
    
   # Upload Media

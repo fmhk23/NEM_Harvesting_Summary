@@ -7,7 +7,10 @@ library(purrr)
 library(purrrlyr)
 library(stringr)
 
-blocks <- fread("../nem_harvest/blocks.csv") %>% as.data.frame()
+## Create daily dataset
+
+## Create daily blocks datasets
+blocks <- fread("~/nem_harvest/blocks.csv") %>% as.data.frame()
 colnames(blocks) <- c("TIMESTAMP","HEIGHT","TOTALFEE")
 
 blocks$TOTALFEE <- as.numeric(blocks$TOTALFEE) / 1000000
@@ -34,13 +37,38 @@ daily_med <- blocks %>% dplyr::group_by(Date) %>%
   dplyr::rename(Median = .out)
 daily$Median <- as.numeric(daily_med$Median)
 
+## Create daily transfers datasets
+transfers <- fread("~/nem_harvest/transfers.csv")
+
+colnames(transfers) <- c("ID", "TIMESTAMP", "SENDERID", "RECIPIENTID")
+transfers$GMT_TIME <- as.POSIXct("2015-03-29 00:06:25", "GMT") + transfers$TIMESTAMP
+transfers$Date <- as.Date(transfers$GMT_TIME)
+
+daily_transfers <- transfers %>% dplyr::group_by(Date) %>% 
+  purrrlyr::by_slice(~ return(nrow(.x))) %>% 
+  dplyr::rename(transfers = .out)
+
+daily_senders <- transfers %>% dplyr::group_by(Date) %>% 
+  purrrlyr::by_slice(function(x){
+    return(length(unique(x$SENDERID)))
+  }) %>% 
+  dplyr::rename(senders = .out)
+
+daily_recipients <- transfers %>% dplyr::group_by(Date) %>% 
+  purrrlyr::by_slice(function(x){
+    return(length(unique(x$RECIPIENTID)))
+  }) %>% 
+  dplyr::rename(recipients = .out)
+
 # Complete DataFrame, round, update type
 daily$Mean <- as.numeric(daily$Mean) %>% round(2) %>% as.character()
 daily$Median <- as.numeric(daily_med$Median) %>% round(2) %>% as.character()
 daily$Max <- as.numeric(daily_max$Max) %>% round(2) %>% as.character()
 daily$Null <- as.numeric(daily_null$.out) * 100
 daily$Null <- round(daily$Null, 1) %>% as.character()
-
+daily$Transfers <- as.numeric(daily_transfers$transfers) %>% as.character()
+daily$Senders <- as.numeric(daily_senders$senders) %>% as.character()
+daily$Recipients <- as.numeric(daily_recipients$recipients) %>% as.character()
 
 fwrite(daily, "~/nem_harvest/daily.csv")
 
