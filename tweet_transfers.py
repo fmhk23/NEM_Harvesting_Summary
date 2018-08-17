@@ -30,8 +30,8 @@ def main():
   # Generate Tweet
   tweet = tw_data['Date'] + '\n'
   tweet = tweet + 'Transfers : ' + TRANSFER + '\n'
-  tweet = tweet + 'Unique Senders : '  + SENDER + '\n'
-  tweet = tweet + 'Unique Recipients : ' + RECIPIENT 
+  tweet = tweet + 'Senders : '  + SENDER + '\n'
+  tweet = tweet + 'Recipients : ' + RECIPIENT 
    
   # POST tweet with media
   params = {'status':tweet}
