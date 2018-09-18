@@ -33,8 +33,12 @@ def main():
   tweet = tweet + 'Average : ' + MEAN + '\n'
   tweet = tweet + 'Median : ' + MEDIAN + '\n'
   tweet = tweet + 'Max : ' + MAX + '\n'
-  tweet = tweet + 'Null Block : ' + NULL_RATIO + ' %' 
-  # tweet = tweet +  
+  tweet = tweet + 'Null Block : ' + NULL_RATIO + ' %' + '\n' 
+  
+  # Add Hashtag
+  hashtag_file = open('hashtag.txt')
+  hashtag = hashtag_file.read()
+  tweet = tweet + hashtag
    
   # Upload Media
   files = {'media': open('daily_plot.png', 'rb')}

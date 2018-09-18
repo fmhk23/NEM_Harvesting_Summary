@@ -31,8 +31,13 @@ def main():
   tweet = tw_data['Date'] + '\n'
   tweet = tweet + 'Transfers : ' + TRANSFER + '\n'
   tweet = tweet + 'Senders : '  + SENDER + '\n'
-  tweet = tweet + 'Recipients : ' + RECIPIENT 
-   
+  tweet = tweet + 'Recipients : ' + RECIPIENT + '\n'
+
+  # Add Hashtag
+  hashtag_file = open('hashtag.txt')
+  hashtag = hashtag_file.read()
+  tweet = tweet + hashtag
+ 
   # POST tweet with media
   params = {'status':tweet}
 
