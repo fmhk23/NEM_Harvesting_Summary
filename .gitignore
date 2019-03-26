@@ -4,3 +4,4 @@ images/
 *.csv
 *.ini
 *.pdf
+.Rproj.user
