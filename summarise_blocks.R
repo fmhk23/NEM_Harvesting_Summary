@@ -40,7 +40,7 @@ daily$Median <- as.numeric(daily_med$Median)
 ## Create daily transfers datasets
 transfers <- fread("~/nem_harvest/transfers.csv")
 
-colnames(transfers) <- c("BLOCKID", "ID", "TIMESTAMP", "SENDERID", "RECIPIENTID")
+colnames(transfers) <- c("BLOCKID", "TransferID", "TIMESTAMP", "SENDERID", "RECIPIENTID")
 transfers$GMT_TIME <- as.POSIXct("2015-03-29 00:06:25", "GMT") + transfers$TIMESTAMP
 transfers$Date <- as.Date(transfers$GMT_TIME)
 
@@ -84,13 +84,28 @@ ggplot(block_today, aes(GMT_TIME, TOTALFEE)) +
 ggsave(str_c(TODAY, ".png"), device = "png", path = "~/nem_harvest/", width = 8.10, height = 4.50, units = "in")
 ggsave("daily_plot.png", device = "png", path = "~/nem_harvest/", width = 8.10, height = 4.50, units = "in")
 
-
 # Mosaic Analysis
 
 mosaictransfers <- fread("mosaictransfers.csv") %>% as.data.frame()
 mosaicdefinition <- fread("mosaicdefinition.csv") %>% as.data.frame()
 
 colnames(mosaictransfers) <- c("TransferID", "DBMosaicID", "Quantity")
-colnames(mosaicdefinition) <- c("ID", "Name", "NameSpace")
+colnames(mosaicdefinition) <- c("DBMosaicID", "Name", "NameSpace")
 
+transfers_today <- transfers %>% dplyr::filter(Date == TODAY)
 
+mosaictransfers_today <- dplyr::inner_join(transfers_today, mosaictransfers, by = "TransferID")
+
+daily_mosaic <- mosaictransfers_today %>% 
+  tidyr::nest(-DBMosaicID) %>% 
+  dplyr::mutate(data = purrr::map(data, nrow)) %>%
+  tidyr::unnest()
+
+colnames(daily_mosaic) <- c("DBMosaicID", "num")
+daily_mosaic <- dplyr::inner_join(daily_mosaic, mosaicdefinition, by = "DBMosaicID") %>% 
+  dplyr::arrange(desc(num))
+
+daily_mosaic$NSName <- str_c(daily_mosaic$NameSpace, ":", daily_mosaic$Name)
+mosaic_filename <- str_c("mosaic_", TODAY, ".csv")
+
+fwrite(daily_mosaic, mosaic_filename)
