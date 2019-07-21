@@ -38,12 +38,41 @@ public class CsvCreator {
       while(rs.next()){
        StringBuilder b = new StringBuilder();
        b.append(rs.getString("BLOCKID")).append(comma)
+        .append(rs.getString("ID")).append(comma) // TRANSFERS$ID = TRANSFEREDMOSAICS$TRANSFERID (Foreign Key)
         .append(rs.getString("TIMESTAMP")).append(comma)
         .append(rs.getString("SENDERID")).append(comma)
         .append(rs.getString("RECIPIENTID"))
         .append(br);
 
        writer.write(b.toString());
+      }
+    }
+    
+    rs = stmt.executeQuery("SELECT * FROM TRANSFERREDMOSAICS");
+
+    try(BufferedWriter writer = Files.newBufferedWriter(Paths.get("mosaictransfers.csv"), Charset.defaultCharset())){
+      while(rs.next()){
+        StringBuilder b = new StringBuilder();
+        b.append(rs.getString("TRANSFERID")).append(comma)
+         .append(rs.getString("DBMOSAICID")).append(comma)
+         .append(rs.getString("QUANTITY"))
+         .append(br);
+        
+        writer.write(b.toString());  
+      }  
+    }
+
+    rs = stmt.executeQuery("SELECT * FROM MOSAICDEFINITIONS");
+
+    try(BufferedWriter writer = Files.newBufferedWriter(Paths.get("mosaicdefinition.csv"), Charset.defaultCharset())){ 
+      while(rs.next()){
+        StringBuilder b = new StringBuilder();
+        b.append(rs.getString("ID")).append(comma)
+         .append(rs.getString("NAME")).append(comma)
+         .append(rs.getString("NAMESPACEID"))
+         .append(br);
+
+        writer.write(b.toString());
       }
     }
     
