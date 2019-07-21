@@ -40,7 +40,7 @@ daily$Median <- as.numeric(daily_med$Median)
 ## Create daily transfers datasets
 transfers <- fread("~/nem_harvest/transfers.csv")
 
-colnames(transfers) <- c("ID", "TIMESTAMP", "SENDERID", "RECIPIENTID")
+colnames(transfers) <- c("BLOCKID", "ID", "TIMESTAMP", "SENDERID", "RECIPIENTID")
 transfers$GMT_TIME <- as.POSIXct("2015-03-29 00:06:25", "GMT") + transfers$TIMESTAMP
 transfers$Date <- as.Date(transfers$GMT_TIME)
 
@@ -75,17 +75,22 @@ fwrite(daily, "~/nem_harvest/daily.csv")
 # Generate today's harvest fees plot
 NROWS <- nrow(daily)
 TODAY <- daily$Date[NROWS - 1]
-today_data <- blocks %>% dplyr::filter(Date == TODAY)
+block_today <- blocks %>% dplyr::filter(Date == TODAY)
 
-ggplot(today_data, aes(GMT_TIME, TOTALFEE)) + 
+ggplot(block_today, aes(GMT_TIME, TOTALFEE)) + 
   ggtitle(TODAY) +
   geom_line() + 
   theme_bw()
 ggsave(str_c(TODAY, ".png"), device = "png", path = "~/nem_harvest/", width = 8.10, height = 4.50, units = "in")
 ggsave("daily_plot.png", device = "png", path = "~/nem_harvest/", width = 8.10, height = 4.50, units = "in")
 
-# Generate last 7 days historical average fee
-# NOTE: Need to create before data frame was comleted by char type.
 
-# last7days_data <- daily[(NROWS-7):(NROWS-1), ]
-# ggplot(last7days_data, aes(Date, Mean)) + geom_line()
+# Mosaic Analysis
+
+mosaictransfers <- fread("mosaictransfers.csv") %>% as.data.frame()
+mosaicdefinition <- fread("mosaicdefinition.csv") %>% as.data.frame()
+
+colnames(mosaictransfers) <- c("TransferID", "DBMosaicID", "Quantity")
+colnames(mosaicdefinition) <- c("ID", "Name", "NameSpace")
+
+
