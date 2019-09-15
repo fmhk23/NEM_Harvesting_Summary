@@ -37,7 +37,7 @@ def main():
     top_mosaics.append(tw_line)
 
   # Generate tweet
-  tweet = str(today) + '\n'
+  tweet = str(yesterday) + '\n'
   tweet = tweet + top_mosaics[0] + '\n'
   tweet = tweet + top_mosaics[1] + '\n'
   tweet = tweet + top_mosaics[2] + '\n'
