@@ -32,7 +32,7 @@ def main():
   tweet = tweet + 'Transfers : ' + TRANSFER + '\n'
   tweet = tweet + 'Senders : '  + SENDER + '\n'
   tweet = tweet + 'Recipients : ' + RECIPIENT + '\n'
-  tweet = tweet + "http://nemdashboard.com/" + '\n'
+  tweet = tweet + "s3-ap-northeast-1.amazonaws.com/nemdashboard.com/index.html" + '\n'
 
   # Add Hashtag
   hashtag_file = open('hashtag.txt')
